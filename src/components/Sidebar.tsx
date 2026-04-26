@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import TaskManager from './TaskManager';
 import ResourceManager from './ResourceManager';
 import GitHubManager from './GitHubManager';
-import SnippetManager from './SnippetManager';
 
 interface SidebarProps {
   files: File[];
@@ -35,47 +34,47 @@ export default function Sidebar({
   onDeleteTask,
   onUpdateProject
 }: SidebarProps) {
-  const [activeTab, setActiveTab] = useState<'files' | 'tasks' | 'resources' | 'github' | 'snippets'>('files');
+  const [activeTab, setActiveTab] = useState<'files' | 'tasks' | 'resources' | 'github'>('files');
 
   return (
     <div className="w-64 h-full bg-[#181818] border-r border-[#333] flex flex-col">
       {/* Sidebar Tabs */}
-      <div className="flex border-b border-[#333] overflow-x-auto scrollbar-hide">
+      <div className="flex border-b border-[#333]">
         <button 
           onClick={() => setActiveTab('files')}
           className={cn(
-            "px-4 py-3 text-[10px] font-black uppercase tracking-widest flex flex-col items-center justify-center gap-1 transition-colors min-w-[70px]",
-            activeTab === 'files' ? "bg-[#1e1e1e] text-purple-400 border-b-2 border-purple-500" : "text-gray-600 hover:text-gray-400"
+            "flex-1 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors",
+            activeTab === 'files' ? "bg-[#1e1e1e] text-purple-400 border-b border-purple-500" : "text-gray-600 hover:text-gray-400"
           )}
         >
-          <Folder size={14} /> <span>الملفات</span>
+          <Folder size={12} /> Files
         </button>
         <button 
           onClick={() => setActiveTab('tasks')}
           className={cn(
-            "px-4 py-3 text-[10px] font-black uppercase tracking-widest flex flex-col items-center justify-center gap-1 transition-colors min-w-[70px]",
-            activeTab === 'tasks' ? "bg-[#1e1e1e] text-purple-400 border-b-2 border-purple-500" : "text-gray-600 hover:text-gray-400"
+            "flex-1 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors",
+            activeTab === 'tasks' ? "bg-[#1e1e1e] text-purple-400 border-b border-purple-500" : "text-gray-600 hover:text-gray-400"
           )}
         >
-          <ListTodo size={14} /> <span>المهام</span>
+          <ListTodo size={12} /> Tasks
         </button>
         <button 
-          onClick={() => setActiveTab('snippets')}
+          onClick={() => setActiveTab('resources')}
           className={cn(
-            "px-4 py-3 text-[10px] font-black uppercase tracking-widest flex flex-col items-center justify-center gap-1 transition-colors min-w-[70px]",
-            activeTab === 'snippets' ? "bg-[#1e1e1e] text-purple-400 border-b-2 border-purple-500" : "text-gray-600 hover:text-gray-400"
+            "flex-1 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors",
+            activeTab === 'resources' ? "bg-[#1e1e1e] text-purple-400 border-b border-purple-500" : "text-gray-600 hover:text-gray-400"
           )}
         >
-          <Code size={14} /> <span>القصاصات</span>
+          <Package size={12} /> Resources
         </button>
         <button 
           onClick={() => setActiveTab('github')}
           className={cn(
-            "px-4 py-3 text-[10px] font-black uppercase tracking-widest flex flex-col items-center justify-center gap-1 transition-colors min-w-[70px]",
-            activeTab === 'github' ? "bg-[#1e1e1e] text-[#2ea44f] border-b-2 border-[#2ea44f]" : "text-gray-600 hover:text-[#2ea44f]/80"
+            "flex-1 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors",
+            activeTab === 'github' ? "bg-[#1e1e1e] text-[#2ea44f] border-b border-[#2ea44f]" : "text-gray-600 hover:text-[#2ea44f]/80"
           )}
         >
-          <Github size={14} /> <span>جيت هاب</span>
+          <Github size={12} /> GitHub
         </button>
       </div>
 
@@ -90,12 +89,12 @@ export default function Sidebar({
               className="flex-1 flex flex-col overflow-hidden"
             >
               <div className="p-4 flex items-center justify-between border-b border-[#222]">
-                <h2 className="text-gray-500 font-black text-[10px] uppercase tracking-widest">
-                  المستعرض (Explorer)
+                <h2 className="text-gray-500 font-semibold text-[10px] uppercase tracking-widest">
+                  Explorer
                 </h2>
                 <button 
                   onClick={onAddFile}
-                  className="p-1 hover:bg-[#333] rounded text-purple-400 transition-colors"
+                  className="p-1 hover:bg-[#333] rounded text-gray-400 transition-colors"
                 >
                   <Plus size={14} />
                 </button>
@@ -113,7 +112,7 @@ export default function Sidebar({
                   >
                     <div className="flex items-center gap-2 min-w-0">
                       <FileCode size={16} className={cn(file.id === currentFileId ? "text-purple-400" : "text-gray-500")} />
-                      <span className="text-xs font-bold truncate">{file.name}</span>
+                      <span className="text-sm truncate">{file.name}</span>
                     </div>
                     
                     {files.length > 1 && (
@@ -146,15 +145,15 @@ export default function Sidebar({
                 onDeleteTask={onDeleteTask}
               />
             </motion.div>
-          ) : activeTab === 'snippets' ? (
+          ) : activeTab === 'resources' ? (
             <motion.div 
-              key="snippets-tab"
+              key="resources-tab"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
               className="flex-1 flex flex-col overflow-hidden"
             >
-              <SnippetManager />
+              <ResourceManager />
             </motion.div>
           ) : (
             <motion.div 

@@ -5,9 +5,6 @@ import AIChat from './components/AIChat';
 import BuildRunTools from './components/BuildRunTools';
 import ProjectDashboard from './components/ProjectDashboard';
 import SettingsPanel from './components/SettingsPanel';
-import Marketplace from './components/Marketplace';
-import ProjectInsights from './components/ProjectInsights';
-import CommandPalette from './components/CommandPalette';
 import { INITIAL_FILES, TEMPLATES, type File, type Task, type Project } from './constants';
 import { 
   Menu, 
@@ -21,9 +18,7 @@ import {
   Monitor,
   ArrowLeft,
   LayoutDashboard,
-  Plus,
-  ShoppingBag,
-  BarChart3
+  Plus
 } from 'lucide-react';
 import { cn } from './lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
@@ -41,7 +36,7 @@ import VisualDesign from './components/VisualDesign';
 import WebPreview from './components/WebPreview';
 
 export default function App() {
-  const [view, setView] = useState<'dashboard' | 'editor' | 'marketplace' | 'insights'>('dashboard');
+  const [view, setView] = useState<'dashboard' | 'editor'>('dashboard');
   const [projects, setProjects] = useState<Project[]>([INITIAL_PROJECT]);
   const [currentProjectId, setCurrentProjectId] = useState<string>(INITIAL_PROJECT.id);
   const [currentFileId, setCurrentFileId] = useState<string>('');
@@ -51,19 +46,7 @@ export default function App() {
   const [isChatOpen, setIsChatOpen] = useState(true);
   const [isOutputOpen, setIsOutputOpen] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [editorMode, setEditorMode] = useState<'code' | 'design' | 'preview'>('code');
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setIsCommandPaletteOpen(prev => !prev);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
 
   // Active Project Helper
   const currentProject = projects.find(p => p.id === currentProjectId) || projects[0];
@@ -201,8 +184,8 @@ ${tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text}`).join('\n')}
             </button>
           )}
           
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setView('dashboard')}>
-            <div className="bg-purple-600 p-1.5 rounded-xl shadow-lg shadow-purple-900/40 group-hover:scale-110 transition-transform">
+          <div className="flex items-center gap-3">
+            <div className="bg-purple-600 p-1.5 rounded-xl shadow-lg shadow-purple-900/40">
               <Cpu className="w-5 h-5 text-white" />
             </div>
             <div className="flex flex-col -space-y-1">
@@ -214,28 +197,6 @@ ${tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text}`).join('\n')}
               )}
             </div>
           </div>
-
-          {/* Navigation Items */}
-          <nav className="hidden lg:flex items-center gap-1 mx-8 bg-[#121212] p-1 rounded-2xl border border-[#333]">
-             {[
-               { id: 'dashboard', label: 'المشاريع', icon: <LayoutDashboard size={14} /> },
-               { id: 'marketplace', label: 'المتجر', icon: <ShoppingBag size={14} /> },
-               { id: 'insights', label: 'التحليلات', icon: <BarChart3 size={14} /> },
-             ].map(item => (
-               <button
-                 key={item.id}
-                 onClick={() => setView(item.id as any)}
-                 className={cn(
-                   "px-4 py-2 rounded-xl text-[11px] font-black uppercase flex items-center gap-2 transition-all",
-                   view === item.id 
-                    ? "bg-purple-600 text-white shadow-lg" 
-                    : "text-gray-500 hover:text-gray-300"
-                 )}
-               >
-                 {item.icon} {item.label}
-               </button>
-             ))}
-          </nav>
         </div>
 
         <div className="flex items-center gap-2">
@@ -280,10 +241,6 @@ ${tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text}`).join('\n')}
             onCreateProject={handleCreateProject}
             onDeleteProject={handleDeleteProject}
           />
-        ) : view === 'marketplace' ? (
-          <Marketplace />
-        ) : view === 'insights' ? (
-          <ProjectInsights projects={projects} />
         ) : (
           <>
             {/* Editor Sidebar */}
@@ -481,11 +438,6 @@ ${tasks.map(t => `- [${t.completed ? 'x' : ' '}] ${t.text}`).join('\n')}
                 <SettingsPanel onClose={() => setIsSettingsOpen(false)} />
               )}
             </AnimatePresence>
-
-            <CommandPalette 
-              isOpen={isCommandPaletteOpen} 
-              onClose={() => setIsCommandPaletteOpen(false)} 
-            />
 
             {/* Mobile Chat Sidebar Overlay */}
             <AnimatePresence>
